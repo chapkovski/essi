@@ -1,0 +1,372 @@
+{% extends "wageauction/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Counting task
+{% endblock %}
+
+{% block content %}
+
+    <head>
+        <style>
+            th, td {
+                padding: 4px 6px 4px 6px;
+            }
+            table#box1 {
+                background-color: #ecf2f9;
+            }
+            table#box2 {
+                background-color: #ecf2f9;
+            }
+        </style>
+    </head>
+
+    <p>
+        Your task is to first find <b>the largest number in each of the two boxes</b> and then <b>add up the two numbers</b>. <br>
+        Submit your answer in the box below. The correct answer is {{ correct_answer }}!
+    </p>
+
+    <table style="width:100%">
+    <tr>
+        <th class="box-heading"> Box 1 </th>
+        <th> </th>
+        <th class="box-heading"> Box 2 </th>
+    </tr>
+    <tr>
+
+        <!-- NEST ANOTHER TABLE! -->
+        <td class="table-borders">
+            <table class="table-style" style="width:99%" id="box1">
+                <!-- First row, first 10 -->
+                <tr>
+                    <td> {{ mat1.0 }} </td>
+                    <td> {{ mat1.1 }} </td>
+                    <td> {{ mat1.2 }} </td>
+                    <td> {{ mat1.3 }} </td>
+                    <td> {{ mat1.4 }} </td>
+                    <td> {{ mat1.5 }} </td>
+                    <td> {{ mat1.6 }} </td>
+                    <td> {{ mat1.7 }} </td>
+                    <td> {{ mat1.8 }} </td>
+                    <td> {{ mat1.9 }} </td>
+                </tr>
+                <!-- second row -->
+                <tr>
+                    <td> {{ mat1.10 }} </td>
+                    <td> {{ mat1.11 }} </td>
+                    <td> {{ mat1.12 }} </td>
+                    <td> {{ mat1.13 }} </td>
+                    <td> {{ mat1.14 }} </td>
+                    <td> {{ mat1.15 }} </td>
+                    <td> {{ mat1.16 }} </td>
+                    <td> {{ mat1.17 }} </td>
+                    <td> {{ mat1.18 }} </td>
+                    <td> {{ mat1.19 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.20 }} </td>
+                    <td> {{ mat1.21 }} </td>
+                    <td> {{ mat1.22 }} </td>
+                    <td> {{ mat1.23 }} </td>
+                    <td> {{ mat1.24 }} </td>
+                    <td> {{ mat1.25 }} </td>
+                    <td> {{ mat1.26 }} </td>
+                    <td> {{ mat1.27 }} </td>
+                    <td> {{ mat1.28 }} </td>
+                    <td> {{ mat1.29 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.30 }} </td>
+                    <td> {{ mat1.31 }} </td>
+                    <td> {{ mat1.32 }} </td>
+                    <td> {{ mat1.33 }} </td>
+                    <td> {{ mat1.34 }} </td>
+                    <td> {{ mat1.35 }} </td>
+                    <td> {{ mat1.36 }} </td>
+                    <td> {{ mat1.37 }} </td>
+                    <td> {{ mat1.38 }} </td>
+                    <td> {{ mat1.39 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.40 }} </td>
+                    <td> {{ mat1.41 }} </td>
+                    <td> {{ mat1.42 }} </td>
+                    <td> {{ mat1.43 }} </td>
+                    <td> {{ mat1.44 }} </td>
+                    <td> {{ mat1.45 }} </td>
+                    <td> {{ mat1.46 }} </td>
+                    <td> {{ mat1.47 }} </td>
+                    <td> {{ mat1.48 }} </td>
+                    <td> {{ mat1.49 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.50 }} </td>
+                    <td> {{ mat1.51 }} </td>
+                    <td> {{ mat1.52 }} </td>
+                    <td> {{ mat1.53 }} </td>
+                    <td> {{ mat1.54 }} </td>
+                    <td> {{ mat1.55 }} </td>
+                    <td> {{ mat1.56 }} </td>
+                    <td> {{ mat1.57 }} </td>
+                    <td> {{ mat1.58 }} </td>
+                    <td> {{ mat1.59 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.60 }} </td>
+                    <td> {{ mat1.61 }} </td>
+                    <td> {{ mat1.62 }} </td>
+                    <td> {{ mat1.63 }} </td>
+                    <td> {{ mat1.64 }} </td>
+                    <td> {{ mat1.65 }} </td>
+                    <td> {{ mat1.66 }} </td>
+                    <td> {{ mat1.67 }} </td>
+                    <td> {{ mat1.68 }} </td>
+                    <td> {{ mat1.69 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.70 }} </td>
+                    <td> {{ mat1.71 }} </td>
+                    <td> {{ mat1.72 }} </td>
+                    <td> {{ mat1.73 }} </td>
+                    <td> {{ mat1.74 }} </td>
+                    <td> {{ mat1.75 }} </td>
+                    <td> {{ mat1.76 }} </td>
+                    <td> {{ mat1.77 }} </td>
+                    <td> {{ mat1.78 }} </td>
+                    <td> {{ mat1.79 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.80 }} </td>
+                    <td> {{ mat1.81 }} </td>
+                    <td> {{ mat1.82 }} </td>
+                    <td> {{ mat1.83 }} </td>
+                    <td> {{ mat1.84 }} </td>
+                    <td> {{ mat1.85 }} </td>
+                    <td> {{ mat1.86 }} </td>
+                    <td> {{ mat1.87 }} </td>
+                    <td> {{ mat1.88 }} </td>
+                    <td> {{ mat1.89 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat1.90 }} </td>
+                    <td> {{ mat1.91 }} </td>
+                    <td> {{ mat1.92 }} </td>
+                    <td> {{ mat1.93 }} </td>
+                    <td> {{ mat1.94 }} </td>
+                    <td> {{ mat1.95 }} </td>
+                    <td> {{ mat1.96 }} </td>
+                    <td> {{ mat1.97 }} </td>
+                    <td> {{ mat1.98 }} </td>
+                    <td> {{ mat1.99 }} </td>
+                </tr>
+            </table>
+        </td>
+
+        <!-- Some space -->
+        <td>
+
+        </td>
+        <!-- NEST ANOTHER TABLE! -->
+        <td class="table-borders">
+                        <table class="table-style" style="width:99%" id="box2">
+                <!-- First row, first 10 -->
+                <tr>
+                    <td> {{ mat2.0 }} </td>
+                    <td> {{ mat2.1 }} </td>
+                    <td> {{ mat2.2 }} </td>
+                    <td> {{ mat2.3 }} </td>
+                    <td> {{ mat2.4 }} </td>
+                    <td> {{ mat2.5 }} </td>
+                    <td> {{ mat2.6 }} </td>
+                    <td> {{ mat2.7 }} </td>
+                    <td> {{ mat2.8 }} </td>
+                    <td> {{ mat2.9 }} </td>
+                </tr>
+                <!-- second row -->
+                <tr>
+                    <td> {{ mat2.10 }} </td>
+                    <td> {{ mat2.11 }} </td>
+                    <td> {{ mat2.12 }} </td>
+                    <td> {{ mat2.13 }} </td>
+                    <td> {{ mat2.14 }} </td>
+                    <td> {{ mat2.15 }} </td>
+                    <td> {{ mat2.16 }} </td>
+                    <td> {{ mat2.17 }} </td>
+                    <td> {{ mat2.18 }} </td>
+                    <td> {{ mat2.19 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.20 }} </td>
+                    <td> {{ mat2.21 }} </td>
+                    <td> {{ mat2.22 }} </td>
+                    <td> {{ mat2.23 }} </td>
+                    <td> {{ mat2.24 }} </td>
+                    <td> {{ mat2.25 }} </td>
+                    <td> {{ mat2.26 }} </td>
+                    <td> {{ mat2.27 }} </td>
+                    <td> {{ mat2.28 }} </td>
+                    <td> {{ mat2.29 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.30 }} </td>
+                    <td> {{ mat2.31 }} </td>
+                    <td> {{ mat2.32 }} </td>
+                    <td> {{ mat2.33 }} </td>
+                    <td> {{ mat2.34 }} </td>
+                    <td> {{ mat2.35 }} </td>
+                    <td> {{ mat2.36 }} </td>
+                    <td> {{ mat2.37 }} </td>
+                    <td> {{ mat2.38 }} </td>
+                    <td> {{ mat2.39 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.40 }} </td>
+                    <td> {{ mat2.41 }} </td>
+                    <td> {{ mat2.42 }} </td>
+                    <td> {{ mat2.43 }} </td>
+                    <td> {{ mat2.44 }} </td>
+                    <td> {{ mat2.45 }} </td>
+                    <td> {{ mat2.46 }} </td>
+                    <td> {{ mat2.47 }} </td>
+                    <td> {{ mat2.48 }} </td>
+                    <td> {{ mat2.49 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.50 }} </td>
+                    <td> {{ mat2.51 }} </td>
+                    <td> {{ mat2.52 }} </td>
+                    <td> {{ mat2.53 }} </td>
+                    <td> {{ mat2.54 }} </td>
+                    <td> {{ mat2.55 }} </td>
+                    <td> {{ mat2.56 }} </td>
+                    <td> {{ mat2.57 }} </td>
+                    <td> {{ mat2.58 }} </td>
+                    <td> {{ mat2.59 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.60 }} </td>
+                    <td> {{ mat2.61 }} </td>
+                    <td> {{ mat2.62 }} </td>
+                    <td> {{ mat2.63 }} </td>
+                    <td> {{ mat2.64 }} </td>
+                    <td> {{ mat2.65 }} </td>
+                    <td> {{ mat2.66 }} </td>
+                    <td> {{ mat2.67 }} </td>
+                    <td> {{ mat2.68 }} </td>
+                    <td> {{ mat2.69 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.70 }} </td>
+                    <td> {{ mat2.71 }} </td>
+                    <td> {{ mat2.72 }} </td>
+                    <td> {{ mat2.73 }} </td>
+                    <td> {{ mat2.74 }} </td>
+                    <td> {{ mat2.75 }} </td>
+                    <td> {{ mat2.76 }} </td>
+                    <td> {{ mat2.77 }} </td>
+                    <td> {{ mat2.78 }} </td>
+                    <td> {{ mat2.79 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.80 }} </td>
+                    <td> {{ mat2.81 }} </td>
+                    <td> {{ mat2.82 }} </td>
+                    <td> {{ mat2.83 }} </td>
+                    <td> {{ mat2.84 }} </td>
+                    <td> {{ mat2.85 }} </td>
+                    <td> {{ mat2.86 }} </td>
+                    <td> {{ mat2.87 }} </td>
+                    <td> {{ mat2.88 }} </td>
+                    <td> {{ mat2.89 }} </td>
+                </tr>
+                <tr>
+                    <td> {{ mat2.90 }} </td>
+                    <td> {{ mat2.91 }} </td>
+                    <td> {{ mat2.92 }} </td>
+                    <td> {{ mat2.93 }} </td>
+                    <td> {{ mat2.94 }} </td>
+                    <td> {{ mat2.95 }} </td>
+                    <td> {{ mat2.96 }} </td>
+                    <td> {{ mat2.97 }} </td>
+                    <td> {{ mat2.98 }} </td>
+                    <td> {{ mat2.99 }} </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td> Your answer is: </td>
+    </tr>
+        <form>
+    <tr>
+
+        <td>
+            <input type="number" id="answer" class="offer" style="background-color: white" value= >
+            <input type="submit" id="submit_btn" class="offer" value="submit">
+        </td>
+        <td>
+
+        </td>
+        <td>
+            <span id="feedback"></span>
+            <input type="hidden" id="nr_tasks" name="tasks_attempted" >
+            <input type="hidden" id="nr_correct" name="tasks_correct" >
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+            <input type="hidden" id="nextbtn" class="offer" value="Next">
+        </td>
+    </tr>
+        </form>
+    </table>
+
+<p> Tasks attempted so far: {{ player.tasks_attempted }} </p>
+<p> Tasks correct so far: {{ player.tasks_correct }} </p>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src= "{% static "directauction/js/jquery.countdown.js" %}" ></script>
+
+    <script type="text/javascript"></script>
+    <script>
+
+
+    var youcorrect = "Your answer was correct.";
+    var youwrong = "Your answer was incorrect. The correct answer was {{ correct_answer }}.";
+
+    $(document).ready(function () {
+
+        $('input[type=number]').on('keydown', function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $('#submit_btn').click();
+            }
+        });
+
+        $("#submit_btn").click(function(){
+            $("#nextbtn").prop('type', "submit");
+            $("#answer").prop("readonly", "readonly");
+            var help = {{ player.tasks_attempted }} + 1;
+            $("#submit_btn").prop('type', "hidden");
+            $("#nr_tasks").val(help);
+            if (Number( $("#answer").val()) === {{ correct_answer }} ) {
+                var helper = {{ player.tasks_correct }} +1;
+                $("#nr_correct").val(helper);
+                $("#feedback").html(youcorrect);
+            }
+            else {
+                var helps = {{ player.tasks_correct }};
+                $("#nr_correct").val(helps);
+                $("#feedback").html(youwrong);
+            }
+
+        })
+    });
+
+
+    </script>
+{% endblock %}

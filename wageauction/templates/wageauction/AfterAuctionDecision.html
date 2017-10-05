@@ -1,0 +1,222 @@
+{% extends "wageauction/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results of the auction
+{% endblock %}
+
+{% block content %}
+
+<div id="some-name">
+<p>
+    In stage 1, <span id="status"> </span>
+    <span id="wage"> </span><span id="last"> <b>{{ player.wage_offer }}</b>. </span>
+</p>
+</div>
+<div>
+<h3> Tax conditions </h3>
+<p>
+    <span id = "tax_condition"> </span>
+</p>
+</div>
+
+
+<div>
+<h3> Potential adjustment </h3>
+
+    <span id="replace">
+<p>
+    The wage offer is preliminary. As an employer, you must choose the final wage.
+</p>
+<p>
+    You can chose the final wage by clicking the appropriate button and then submitting.
+</p>
+<p>
+    Your <b>initial wage of {{ player.wage_offer }}</b> is marked with the <b><span class="chosenbutton">light blue</span></b> background colour.
+</p>
+    </span>
+    </div>
+    <span id="hide">
+    <p>You can offer: </p>
+    </span>
+        <form>
+        <span id="adjustmentoptions">
+    <button type="button" id="btn30" class="offer">30</button>
+    <button type="button" id="btn35" class="offer">35</button>
+    <button type="button" id="btn40" class="offer">40</button>
+    <button type="button" id="btn45" class="offer">45</button>
+    <button type="button" id="btn50" class="offer">50</button>
+    <button type="button" id="btn55" class="offer">55</button>
+    <button type="button" id="btn60" class="offer">60</button>
+    <button type="button" id="btn65" class="offer">65</button>
+    <button type="button" id="btn70" class="offer">70</button>
+    <button type="button" id="btn75" class="offer">75</button>
+    <button type="button" id="btn80" class="offer">80</button>
+    <button type="button" id="btn85" class="offer">85</button>
+    <button type="button" id="btn90" class="offer">90</button>
+    <button type="button" id="btn95" class="offer">95</button>
+    <button type="button" id="btn100" class="offer">100</button>
+
+
+    <p>Submit the final wage by clicking "submit": </p>
+            </span>
+    <input type="number" id="test" value=0 class="offer" style="background-color:white">
+    <input type="hidden" id="adjustment" name="wage_adjustment" value= 0 >
+    <input type="submit" id="submit_button" value="Submit" class="offer" onclick='sendmessage()'>
+    </form>
+
+</div>
+</p>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+
+    <!-- define a style -->
+    <style type="text/css">
+.chosenbutton {
+            background-color:lightskyblue;
+            color: navy;
+            padding: 2px 10px 2px 10px;
+            border: groove;
+            border-color: lightsteelblue;
+            font-weight: bold;
+            margin: 1px;
+}
+    </style>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+
+    $(document).ready(function () {
+      $("#btn30").click(function () {
+          $("#test").val(30);
+          $("#adjustment").val( 30 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn35").click(function () {
+          $("#test").val(35);
+          $("#adjustment").val( 35 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn40").click(function () {
+          $("#test").val(40);
+          $("#adjustment").val( 40 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn45").click(function () {
+          $("#test").val(45);
+          $("#adjustment").val( 45 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn50").click(function () {
+          $("#test").val(50);
+          $("#adjustment").val( 50 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn55").click(function () {
+          $("#test").val(55);
+          $("#adjustment").val( 55 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn60").click(function () {
+          $("#test").val(60);
+          $("#adjustment").val( 60 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn65").click(function () {
+          $("#test").val(65);
+          $("#adjustment").val( 65 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn70").click(function () {
+          $("#test").val(70);
+          $("#adjustment").val( 70 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn75").click(function () {
+          $("#test").val(75);
+          $("#adjustment").val( 75 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn80").click(function () {
+          $("#test").val(80);
+          $("#adjustment").val( 80 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn85").click(function () {
+          $("#test").val(85);
+          $("#adjustment").val( 85 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn90").click(function () {
+          $("#test").val(90);
+          $("#adjustment").val( 90 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn95").click(function () {
+          $("#test").val(95);
+          $("#adjustment").val( 95 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+      $("#btn100").click(function () {
+          $("#test").val(100);
+          $("#adjustment").val( 100 - {{ player.wage_offer }});
+          $("#submit_button").prop("type", "submit");
+      });
+    });
+
+        var hired = "you have <b>hired</b> a worker.";
+        var unmatched = "you <b>were not able to hire</b> a worker.";
+        var offered = "You have offered a wage of ";
+        var partner = {{ player.partner_id |json }};
+
+        var taxcond = {{ player.tax_outcome |json }};
+        var notax = "There are no unforeseen taxes this period.";
+        var firmtax = "A 20 % <b> tax on employer revenue </b> will be implemented.";
+        var workertax = "A 20 % <b> tax on worker earnings </b> will be implemented.";
+        var na = "Does not apply.";
+
+        var noadj = "Because you didn't hire a worker, adjustment is not applicable. Press submit to continue to the next stage."
+
+        window.onload = function () {
+            if (partner === 0) {
+                $('span#status').html(unmatched);
+                $('span#last').empty();
+                $('span#wage').empty();
+                $('span#tax_condition').html(na);
+                $('span#adjustmentoptions').empty();
+                $('#submit_button').prop('type', "submit");
+                $('span#replace').html(noadj);
+                $('span#hide').empty();
+            }
+            else {
+                $('span#status').html(hired);
+                $("span#wage").html(offered);
+                var wage_offer = {{ player.wage_offer }}
+                $("#btn"+wage_offer).prop("class", 'chosenbutton');
+                if (taxcond === 1) {
+                    $('span#tax_condition').html(notax);
+                }
+                else if (taxcond === 2 ) {
+                    $('span#tax_condition').html(firmtax)
+                }
+                else if (taxcond === 3) {
+                    $('span#tax_condition').html(workertax)
+                }
+                else {
+                    $('span#tax_condition').html(na)
+                }
+                $('#test').val(wage_offer);
+                }
+
+
+        };
+
+
+    </script>
+{% endblock %}
