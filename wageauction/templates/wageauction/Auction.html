@@ -217,7 +217,7 @@
                     active_contracts = jQuery.parseJSON(obj.active_contracts);
                     console.log('OPEN CONTRACTS:: ' + active_contracts);
                     $.each(active_contracts, function (key, value) {
-                        alert(value.pk + ": " + value.amount);
+{#                        alert(value.pk + ": " + value.amount);#}
                     });
                     $("#emptyoffers").empty();
                     var employer_offering = obj.employer_id_in_group;

@@ -28,7 +28,7 @@ def process_employer_request(jsonmessage, mygroup):
     print('CONTRACT TO FILL IN:: ', contract)
     active_contracts = list(JobContract.objects. \
         filter(accepted=False, employer__group=mygroup).values('pk', 'amount'))
-    serialized_q = json.dumps(active_contracts, cls=DjangoJSONEncoder)
+    serialized_contracts = json.dumps(active_contracts, cls=DjangoJSONEncoder)
     # print(serializers.serialize("json", active_contracts))
     print(active_contracts)
     curemployer_id_id_in_group = jsonmessage['id_employer_in_group']
@@ -57,7 +57,7 @@ def process_employer_request(jsonmessage, mygroup):
         "wage_offered": wage_offer,
         "time_left": time_left,
         "employers_left": employers_left_in,
-        'active_contracts': serialized_q,
+        'active_contracts': serialized_contracts,
 
     })
     return textforgroup

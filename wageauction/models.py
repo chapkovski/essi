@@ -20,7 +20,7 @@ class Constants(BaseConstants):
     name_in_url = 'wageauction'
     players_per_group = 5
     num_rounds = 2
-    starting_time = 1500
+    starting_time = 15000
     num_employers = 2
     num_workers = players_per_group - num_employers
     task_time = 300
