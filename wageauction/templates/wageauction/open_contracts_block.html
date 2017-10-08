@@ -1,0 +1,16 @@
+    <p>Standing wage offers are: </p>
+    <div id="active_offers">
+        {% if active_contracts %}
+            {% for contract in active_contracts %}
+                <span  data-pk={{ contract.pk }} data-amount={{ contract.amount }} class='badge open_contract offer'>{{ contract.amount }}</span>
+            {% endfor %}
+        {% else %}
+            There are currently no standing offers.
+        {% endif %}
+    </div>
+
+<style>
+    .open_contract{
+        cursor: pointer!important;
+    }
+</style>

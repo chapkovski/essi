@@ -24,6 +24,10 @@ class Constants(BaseConstants):
     num_employers = 2
     num_workers = players_per_group - num_employers
     task_time = 300
+    lb = 30
+    ub = 101
+    step = 5
+    offers = list(range(lb, ub, step))
 
 
 class Subsession(BaseSubsession):
@@ -50,18 +54,7 @@ class Subsession(BaseSubsession):
 
 class Group(BaseGroup):
     auctionenddate = models.FloatField()
-
-    matched1 = models.IntegerField()
-    matched2 = models.IntegerField()
-    matched3 = models.IntegerField()
-    matched4 = models.IntegerField()
-    matched5 = models.IntegerField()
-
-    standing1 = models.IntegerField()
-    standing2 = models.IntegerField()
-    standing3 = models.IntegerField()
-    standing4 = models.IntegerField()
-    standing5 = models.IntegerField()
+    day_over = models.BooleanField()
 
     def time_left(self):
         now = time.time()
@@ -77,7 +70,7 @@ class Group(BaseGroup):
                 else:
                     if person.tax_outcome == 2:
                         person.payoff = 40 - (
-                        person.wage_offer + person.wage_adjustment) + 0.8 * 20 * person.tasks_correct
+                            person.wage_offer + person.wage_adjustment) + 0.8 * 20 * person.tasks_correct
                     else:
                         person.payoff = 40 - (person.wage_offer + person.wage_adjustment) + 20 * person.tasks_correct
             if person.role() == 'worker':

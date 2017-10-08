@@ -1,13 +1,13 @@
 from otree.api import Currency as c, currency_range
 from . import models
 from ._builtin import Page, WaitPage
-from .models import Constants, Group, Subsession
+from .models import Constants, Group, Subsession, JobContract
 import time
 from random import randint
 from channels import Group as ChannelGroup
 
-class WP(WaitPage):
 
+class WP(WaitPage):
     def after_all_players_arrive(self):
         now = time.time()
         self.group.auctionenddate = now + Constants.starting_time
@@ -15,32 +15,35 @@ class WP(WaitPage):
 
 class Auction(Page):
     def is_displayed(self):
-        return self.player.role() == 'employer'
+        closed_contract = self.player.contract.filter(accepted=True).exists()
+        # if closed_contract:
+        #     return False
+        return self.player.role() == 'employer' and not self.group.day_over
 
     def vars_for_template(self):
-        group_name = 'group'+str(self.group.id)
-        # ChannelGroup(group_name).send({
-        # "text": "huhu",
-        # })
-        return {'time_left': self.group.time_left()}
+        active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group)
+        return {'time_left': self.group.time_left(),
+                'active_contracts': active_contracts,
+                }
 
-    form_model = models.Player
-    form_fields = ['wage_offer', 'partner_id']
+
 
 
 class Accept(Page):
     def is_displayed(self):
-        return self.player.role() == 'worker'
+
+        closed_contract = self.player.work_to_do.filter(accepted=True).exists()
+        return self.player.role() == 'worker' and not self.group.day_over  #and not closed_contract
 
     def vars_for_template(self):
-        return {'time_left': self.group.time_left()}
+        active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group).values('pk','amount')
+        return {'time_left': self.group.time_left(),
+                'active_contracts': active_contracts}
 
-    form_model = models.Player
-    form_fields = ['wage_offer', 'partner_id']
+
 
 
 class WPage(WaitPage):
-
     title_text = "Results of the auction"
     body_text = "Your decision has been recorded... we are waiting for the other participants."
 
@@ -56,7 +59,7 @@ class WPage(WaitPage):
         for p in self.subsession.get_players():
             for i in range(1, Constants.num_employers + 1):
                 if p.partner_id == i:
-                    newer_matrix.append([p, dicta[i-1][1]])
+                    newer_matrix.append([p, dicta[i - 1][1]])
         self.subsession.set_group_matrix(newer_matrix)
 
 
@@ -156,7 +159,7 @@ class WorkPage(Page):
             my_value_correct = post_dict.get('tasks_correct')
             self.player.tasks_attempted = int(my_value_attempted)
             self.player.tasks_correct = int(my_value_correct)
-        # WOW THIS WORKS! :) - ONLY THE PAGE ERRORS ALL THE TIME. something wrong with the int() function
+            # WOW THIS WORKS! :) - ONLY THE PAGE ERRORS ALL THE TIME. something wrong with the int() function
 
 
 class Work1(WorkPage):
