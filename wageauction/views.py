@@ -22,9 +22,10 @@ class WorkerPage(Page):
     def extra_is_displayed(self):
         return True
 
+
 class ActiveWorkerPage(Page):
     def is_displayed(self):
-        closed_contract=self.player.work_to_do.filter(accepted=True).exists()
+        closed_contract = self.player.work_to_do.filter(accepted=True).exists()
         return self.player.role() == 'worker' and self.extra_is_displayed() and closed_contract
 
     def extra_is_displayed(self):
@@ -40,7 +41,7 @@ class WP(WaitPage):
 class Auction(EmployerPage):
     def extra_is_displayed(self):
         closed_contract = self.player.contract.filter(accepted=True).exists()
-        return not any(self.group.day_over, closed_contract)
+        return not any([self.group.day_over, closed_contract])
 
     def vars_for_template(self):
         active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group)
@@ -52,7 +53,7 @@ class Auction(EmployerPage):
 class Accept(WorkerPage):
     def extra_is_displayed(self):
         closed_contract = self.player.work_to_do.filter(accepted=True).exists()
-        return not any(self.group.day_over, closed_contract)
+        return not any([self.group.day_over, closed_contract])
 
     def vars_for_template(self):
         active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group).values('pk', 'amount')
@@ -85,27 +86,10 @@ class Start(ActiveWorkerPage):
     ...
 
 
-
 class WorkPage(ActiveWorkerPage):
     timer_text = 'Time left to complete this section:'
 
-    timeout_submission = {'tasks_attempted': True,
-                          'tasks_correct': True}
-
-    def get_timeout_seconds(self):
-        return self.participant.vars['expiry_timestamp'] - time.time()
-
-    def is_displayed(self):
-        if self.player.partner_id > 0 and self.player.role() == 'worker':
-            if self.participant.vars['expiry_timestamp'] - time.time() > 3:
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    form_model = models.Player
-    form_fields = ["tasks_attempted", "tasks_correct"]
+    timeout_seconds = 300
 
     def vars_for_template(self):
         x = randint(50, 100)
@@ -124,15 +108,7 @@ class WorkPage(ActiveWorkerPage):
         }
 
     def before_next_page(self):
-        # this is silly but worth trying out
-        if self.timeout_happened:
-            post_dict = self.request.POST.dict()
-            my_value_attempted = post_dict.get('tasks_attempted')
-            my_value_correct = post_dict.get('tasks_correct')
-            self.player.tasks_attempted = int(my_value_attempted)
-            self.player.tasks_correct = int(my_value_correct)
-            # WOW THIS WORKS! :) - ONLY THE PAGE ERRORS ALL THE TIME. something wrong with the int() function
-
+        ...
 
 
 class WaitP(WaitPage):
@@ -150,6 +126,7 @@ page_sequence = [
     AfterAuctionDecision,
     AuctionResultsEmployer, AuctionResultsWorker,
     Start,
+    WorkPage
     WaitP,
     Results
 ]

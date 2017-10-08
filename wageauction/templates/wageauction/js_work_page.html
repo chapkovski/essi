@@ -1,0 +1,26 @@
+{% load staticfiles otree_tags %}
+<script>
+    var player_pk = "{{ player.pk }}";
+    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    var socket = new WebSocket(ws_scheme + '://' + window.location.host + "/workpage/" + player_pk);
+
+    // Handle any errors that occur.
+    socket.onerror = function (error) {
+        console.log('WebSocket Error: ' + error);
+    };
+    // Show a connected message when the WebSocket is opened.
+    socket.onopen = function (event) {
+        console.log('connected to oTree');
+    };
+    // Handle messages sent by the server.
+    socket.onmessage = function (event) {
+        console.log('message received')
+        var obj = jQuery.parseJSON(event.data);
+
+    }
+    ;
+    socket.onclose = function (event) {
+        console.log('disconnected from oTree');
+    };
+</script>
+
