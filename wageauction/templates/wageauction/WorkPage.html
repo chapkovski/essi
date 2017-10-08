@@ -66,5 +66,19 @@
 
 {% block scripts %}
     <script type="text/javascript" src="{% static "directauction/js/jquery.countdown.js" %}"></script>
+    {% include 'wageauction/js_work_page.html' %}
+    <script>
+        $("button.answer").on("click", function () {
+            console.log('btn clicked');
+            var msg = {
 
+                'answer': $('input#answer').val() ,
+            };
+            if (socket.readyState === socket.OPEN) {
+                socket.send(JSON.stringify(msg));
+            }
+            ;
+
+        });
+    </script>
 {% endblock %}

@@ -1,8 +1,8 @@
 {% load staticfiles otree_tags %}
 <script>
-    var player_pk = "{{ player.pk }}";
+    var player_code = "{{ participant.code }}";
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var socket = new WebSocket(ws_scheme + '://' + window.location.host + "/workpage/" + player_pk);
+    var socket = new WebSocket(ws_scheme + '://' + window.location.host + "/workpage/" + player_code);
 
     // Handle any errors that occur.
     socket.onerror = function (error) {
@@ -14,7 +14,7 @@
     };
     // Handle messages sent by the server.
     socket.onmessage = function (event) {
-        console.log('message received')
+        console.log('message received:: ' + JSON.stringify((event.data)));
         var obj = jQuery.parseJSON(event.data);
 
     }

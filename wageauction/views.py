@@ -89,23 +89,9 @@ class Start(ActiveWorkerPage):
 class WorkPage(ActiveWorkerPage):
     timer_text = 'Time left to complete this section:'
 
-    timeout_seconds = 300
+    timeout_seconds = 30000
 
-    def vars_for_template(self):
-        x = randint(50, 100)
-        y = randint(50, 100)
-        listx = [randint(10, x)]
-        listy = [randint(10, y)]
-        for i in range(0, 99):
-            listx.append(randint(10, x))
-            listy.append(randint(10, y))
-        answer = max(listx) + max(listy)
 
-        return {
-            "mat1": listx,
-            "mat2": listy,
-            "correct_answer": answer,
-        }
 
     def before_next_page(self):
         ...
@@ -126,7 +112,7 @@ page_sequence = [
     AfterAuctionDecision,
     AuctionResultsEmployer, AuctionResultsWorker,
     Start,
-    WorkPage
+    WorkPage,
     WaitP,
     Results
 ]

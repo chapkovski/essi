@@ -5,10 +5,11 @@ import json
 import time
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
-
+from random import randint
 
 def ws_connect(message, group_name):
     Group(group_name).add(message.reply_channel)
+
 
 def get_contracts(group):
     contracts = {}
@@ -22,6 +23,7 @@ def get_contracts(group):
     contracts['closed_contracts'] = closed_contracts
     return contracts
 
+
 def process_employer_request(jsonmessage, group):
     print('message from employer')
     employer = Player.objects.get(pk=jsonmessage['player_pk'])
@@ -32,8 +34,6 @@ def process_employer_request(jsonmessage, group):
     if not created:
         contract.amount = wage_offer
         contract.save()
-
-
 
 
 def process_worker_request(jsonmessage, respondent, group):
@@ -73,6 +73,41 @@ def ws_message(message, group_name):
         "text": json.dumps(textforgroup),
     })
 
+
 # Connected to websocket.disconnect
 def ws_disconnect(message, group_name):
     Group(group_name).discard(message.reply_channel)
+
+
+# =============
+
+def get_task():
+    x = randint(50, 100)
+    y = randint(50, 100)
+    listx = [randint(10, x)]
+    listy = [randint(10, y)]
+    for i in range(0, 99):
+        listx.append(randint(10, x))
+        listy.append(randint(10, y))
+    answer = max(listx) + max(listy)
+
+    return {
+        "mat1": listx,
+        "mat2": listy,
+        "correct_answer": answer,
+    }
+
+def work_connect(message, worker_code):
+    print('worker connected')
+    message.reply_channel.send({'text': json.dumps(get_task())})
+
+
+def work_disconnect(message, worker_code):
+    print('worker disconnected')
+
+
+def work_message(message, worker_code):
+    jsonmessage = json.loads(message.content['text'])
+    answer = jsonmessage.get('answer')
+    print('worker {} sends answer {}'.format(worker_code, answer))
+    message.reply_channel.send({'text': json.dumps(get_task())})
