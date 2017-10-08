@@ -30,9 +30,8 @@
     <script type="text/javascript" src="{% static "wageauction/js/jquery.countdown.js" %}"></script>
     {% include 'wageauction/js_vars_for_auction_block.html' %}
     <script>
-        $("span.open_contract").on("click", function () {
-
-            accept_contract($(this).data('pk'));
+        $(document).on('click', '.open_contract', function () {
+           accept_contract($(this).data('pk'));
         });
         accept_contract = function (contract) {
 

@@ -10,12 +10,11 @@
     var closed_contracts;
     var nooffers = "There are currently no standing offers.";
     var milliseconds = 1000 * time_left;
-    var message_r;
+
 
     function update_create_countdown(milliseconds) {
         $('div#otree-timeout').show();
         var currentDate = new Date();
-
         $('span#otree-timer__time-left').countdown(currentDate.valueOf() + milliseconds)
             .on('update.countdown', function (event) {
                 // %-N is "Total count of minutes till the end, non-padded"
@@ -53,10 +52,6 @@
     };
     // Handle messages sent by the server.
     socket.onmessage = function (event) {
-{#        console.log(JSON.stringify(event.data));#}
-        console.log('MY ROLE:: '+role);
-        console.log('MY PK:: '+player_pk);
-
         var obj = jQuery.parseJSON(event.data);
         if (obj.day_over) {
             $('#form').submit();
@@ -67,7 +62,7 @@
             var closed_contracts = jQuery.parseJSON(obj.closed_contracts);
             console.log('CLOSED::::' + obj.closed_contracts);
             $.each(closed_contracts, function (key, value) {
-                console.log('EMPLOYER ID:: '+ value.employer_id);
+                    console.log('EMPLOYER ID:: ' + value.employer_id);
                     if (role === 'employer' && parseInt(value.employer_id) === parseInt(player_pk)) {
                         $('#form').submit();
                         return;
@@ -88,8 +83,7 @@
             active_contracts = jQuery.parseJSON(obj.active_contracts);
             $('div#active_offers').empty();
             $.each(active_contracts, function (key, value) {
-                var $to_add = "<span class='badge offer open_contract' data-pk='" + value.pk + "'>" + value.amount + "</span>";
-                console.log($to_add);
+                $to_add = '<span class="badge open_contract offer" data-pk="' +value.pk +'" data-amount="' + value.amount  +'">'+value.amount +'</span>';
                 $('div#active_offers').append($to_add);
             });
         }

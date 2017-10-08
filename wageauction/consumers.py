@@ -73,8 +73,6 @@ def ws_message(message, group_name):
         "text": json.dumps(textforgroup),
     })
 
-
-
 # Connected to websocket.disconnect
 def ws_disconnect(message, group_name):
     Group(group_name).discard(message.reply_channel)
