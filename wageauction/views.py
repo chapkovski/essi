@@ -7,18 +7,40 @@ from random import randint
 from channels import Group as ChannelGroup
 
 
+class EmployerPage(Page):
+    def is_displayed(self):
+        return self.player.role() == 'employer' and self.extra_is_displayed()
+
+    def extra_is_displayed(self):
+        return True
+
+
+class WorkerPage(Page):
+    def is_displayed(self):
+        return self.player.role() == 'worker' and self.extra_is_displayed()
+
+    def extra_is_displayed(self):
+        return True
+
+class ActiveWorkerPage(Page):
+    def is_displayed(self):
+        closed_contract=self.player.work_to_do.filter(accepted=True).exists()
+        return self.player.role() == 'worker' and self.extra_is_displayed() and closed_contract
+
+    def extra_is_displayed(self):
+        return True
+
+
 class WP(WaitPage):
     def after_all_players_arrive(self):
         now = time.time()
         self.group.auctionenddate = now + Constants.starting_time
 
 
-class Auction(Page):
-    def is_displayed(self):
+class Auction(EmployerPage):
+    def extra_is_displayed(self):
         closed_contract = self.player.contract.filter(accepted=True).exists()
-        # if closed_contract:
-        #     return False
-        return self.player.role() == 'employer' and not self.group.day_over
+        return not any(self.group.day_over, closed_contract)
 
     def vars_for_template(self):
         active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group)
@@ -27,94 +49,44 @@ class Auction(Page):
                 }
 
 
-
-
-class Accept(Page):
-    def is_displayed(self):
-
+class Accept(WorkerPage):
+    def extra_is_displayed(self):
         closed_contract = self.player.work_to_do.filter(accepted=True).exists()
-        return self.player.role() == 'worker' and not self.group.day_over  #and not closed_contract
+        return not any(self.group.day_over, closed_contract)
 
     def vars_for_template(self):
-        active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group).values('pk','amount')
+        active_contracts = JobContract.objects.filter(accepted=False, employer__group=self.group).values('pk', 'amount')
         return {'time_left': self.group.time_left(),
                 'active_contracts': active_contracts}
 
 
-
-
-class WPage(WaitPage):
-    title_text = "Results of the auction"
-    body_text = "Your decision has been recorded... we are waiting for the other participants."
-
-    def after_all_players_arrive(self):
-        dicta = []
-        new_matrix = []
-        for p in self.subsession.get_players():
-            dicta.append([p.partner_id, p])
-        for q in self.subsession.get_players():
-            if q.partner_id == 0:
-                new_matrix.append(q)
-        newer_matrix = [new_matrix]
-        for p in self.subsession.get_players():
-            for i in range(1, Constants.num_employers + 1):
-                if p.partner_id == i:
-                    newer_matrix.append([p, dicta[i - 1][1]])
-        self.subsession.set_group_matrix(newer_matrix)
-
-
-class AfterAuctionDecision(Page):
-    def is_displayed(self):
-        if self.player.partner_id > 0 and self.player.role() == 'employer':
-            return True
-        else:
-            return False
-
+class AfterAuctionDecision(EmployerPage):
     form_model = models.Player
     form_fields = ["wage_adjustment"]
 
+    def extra_is_displayed(self):
+        closed_contract = self.player.contract.filter(accepted=True).exists()
+        return closed_contract
 
-class AuctionResultsWait(WaitPage):
-    template_name = 'wageauction/AuctionResultsWait.html'
-    # The above line allows adjustments to the basic wait page!
-
-    wait_for_all_groups = True
-
-    def after_all_players_arrive(self):
-        for p in self.subsession.get_players():
-            if p.role() == 'worker':
-                for partner in p.get_others_in_group():
-                    if p.partner_id > 0:
-                        p.wage_adjustment = partner.wage_adjustment
+    def before_next_page(self):
+        closed_contract = self.player.contract.get(accepted=True)
+        closed_contract.amount_updated = self.player.wage_adjustment
 
 
-class AuctionResultsEmployer(Page):
-    def is_displayed(self):
-        if self.player.partner_id > 0 and self.player.role() == 'employer':
-            return True
+class AuctionResultsEmployer(EmployerPage):
+    ...
 
 
-class AuctionResultsWorker(Page):
-    def is_displayed(self):
-        if self.player.partner_id > 0 and self.player.role() == 'worker':
-            return True
+class AuctionResultsWorker(ActiveWorkerPage):
+    ...
 
 
-class Start(Page):
-    def is_displayed(self):
-        if self.player.partner_id > 0 and self.player.role() == 'worker':
-            return True
+class Start(ActiveWorkerPage):
+    ...
 
 
-class WaitWorkers(WaitPage):
-    wait_for_all_groups = True
 
-    def after_all_players_arrive(self):
-        for worker in self.session.get_participants():
-            worker.vars['expiry_timestamp'] = time.time() + models.Constants.task_time
-
-
-class WorkPage(Page):
+class WorkPage(ActiveWorkerPage):
     timer_text = 'Time left to complete this section:'
 
     timeout_submission = {'tasks_attempted': True,
@@ -162,75 +134,22 @@ class WorkPage(Page):
             # WOW THIS WORKS! :) - ONLY THE PAGE ERRORS ALL THE TIME. something wrong with the int() function
 
 
-class Work1(WorkPage):
-    pass
-
-
-class Work2(WorkPage):
-    pass
-
-
-class Work3(WorkPage):
-    pass
-
-
-class Work4(WorkPage):
-    pass
-
-
-class Work5(WorkPage):
-    pass
-
-
-class Work6(WorkPage):
-    pass
-
-
-class Work7(WorkPage):
-    pass
-
-
-class Work8(WorkPage):
-    pass
-
-
-class Work9(WorkPage):
-    pass
-
-
-class Work10(WorkPage):
-    pass
-
 
 class WaitP(WaitPage):
     def after_all_players_arrive(self):
-        for p in self.subsession.get_players():
-            if p.role() == 'employer':
-                for partner in p.get_others_in_group():
-                    if p.partner_id > 0:
-                        p.tasks_correct = partner.tasks_correct
-                        p.tasks_attempted = partner.tasks_attempted
-
         self.group.set_payoffs()
-
-        for p in self.subsession.get_players():
-            if p.partner_id > 0:
-                for partner in p.get_others_in_group():
-                    p.partner_payoff = partner.payoff
 
 
 class Results(Page):
-    pass
+    ...
 
 
 page_sequence = [
     WP,
     Auction, Accept,
-    WPage,
-    AfterAuctionDecision, AuctionResultsWait,
+    AfterAuctionDecision,
     AuctionResultsEmployer, AuctionResultsWorker,
-    Start, WaitWorkers,
-    Work1, Work2, Work3, Work4, Work5, Work6, Work7, Work8, Work9, Work10,
+    Start,
     WaitP,
     Results
 ]
