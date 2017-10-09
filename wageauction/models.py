@@ -85,12 +85,15 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     wage_offer = models.IntegerField()
-    partner_id = models.IntegerField()
     tax_outcome = models.PositiveIntegerField()
     wage_adjustment = models.IntegerField()
+    wage_adjusted=models.IntegerField()
+    last_correct_answer=models.IntegerField()
     tasks_attempted = models.PositiveIntegerField()
     tasks_correct = models.PositiveIntegerField()
     partner_payoff = models.CurrencyField()
+    active_worker=models.BooleanField()
+    job_to_do_updated=models.BooleanField()
 
     def role(self):
         if self.participant.id_in_session < Constants.num_employers + 1:

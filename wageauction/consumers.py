@@ -7,6 +7,7 @@ from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from random import randint
 
+
 def ws_connect(message, group_name):
     Group(group_name).add(message.reply_channel)
 
@@ -80,16 +81,18 @@ def ws_disconnect(message, group_name):
 
 
 # =============
+def slicelist(l, n):
+    return [l[i:i + n] for i in range(0, len(l), n)]
+
 
 def get_task():
-    x = randint(50, 100)
-    y = randint(50, 100)
-    listx = [randint(10, x)]
-    listy = [randint(10, y)]
-    for i in range(0, 99):
-        listx.append(randint(10, x))
-        listy.append(randint(10, y))
+    max_len = 100
+    string_len = 10
+    listx = [randint(10, 99) for i in range(max_len)]
+    listy = [randint(10, 99) for i in range(max_len)]
     answer = max(listx) + max(listy)
+    listx = slicelist(listx, string_len)
+    listy = slicelist(listy, string_len)
 
     return {
         "mat1": listx,
@@ -97,17 +100,31 @@ def get_task():
         "correct_answer": answer,
     }
 
-def work_connect(message, worker_code):
+
+def work_connect(message, worker_code, player_pk):
     print('worker connected')
-    message.reply_channel.send({'text': json.dumps(get_task())})
+    new_task = get_task()
+    player = Player.objects.get(participant__code__exact=worker_code, pk=player_pk)
+    player.last_correct_answer = new_task['correct_answer']
+    player.save()
+    message.reply_channel.send({'text': json.dumps(new_task)})
 
 
-def work_disconnect(message, worker_code):
+def work_disconnect(message, worker_code, player_pk):
     print('worker disconnected')
 
 
-def work_message(message, worker_code):
+def work_message(message, worker_code, player_pk):
+    print('TASK: ', get_task())
     jsonmessage = json.loads(message.content['text'])
     answer = jsonmessage.get('answer')
-    print('worker {} sends answer {}'.format(worker_code, answer))
-    message.reply_channel.send({'text': json.dumps(get_task())})
+    player = Player.objects.get(participant__code__exact=worker_code, pk=player_pk)
+    player.tasks_attempted += 1
+    if int(answer) == int(player.last_correct_answer):
+        player.tasks_correct += 1
+    new_task = get_task()
+    new_task['tasks_correct']=player.tasks_correct
+    new_task['tasks_attempted'] = player.tasks_attempted
+    player.last_correct_answer = new_task['correct_answer']
+    player.save()
+    message.reply_channel.send({'text': json.dumps(new_task)})

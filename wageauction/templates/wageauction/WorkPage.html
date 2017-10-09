@@ -26,7 +26,7 @@
     <p>
         Your task is to first find <b>the largest number in each of the two boxes</b> and then <b>add up the two
         numbers</b>. <br>
-        Submit your answer in the box below. The correct answer is {{ correct_answer }}!
+        Submit your answer in the box below. The correct answer is <span id="correct_answer"></span>!
     </p>
 
     <table style="width:100%">
@@ -56,29 +56,44 @@
         </tr>
     </table>
     <div>Your answer is:</div>
-    <input type="number" id="answer" class="offer" style="background-color: white" value=>
+    <input type="number" id="answer" class="offer" style="background-color: white" required>
     <button class="answer" type="button">Answer</button>
 
-    <p> Tasks attempted so far: {{ player.tasks_attempted }} </p>
-    <p> Tasks correct so far: {{ player.tasks_correct }} </p>
+    <p> Tasks attempted so far: <span id="tasks_attempted">{{ player.tasks_attempted }}</span></p>
+    <p> Tasks correct so far: <span id="tasks_correct"> {{ player.tasks_correct }}</span></p>
 
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
     <script type="text/javascript" src="{% static "directauction/js/jquery.countdown.js" %}"></script>
     {% include 'wageauction/js_work_page.html' %}
     <script>
         $("button.answer").on("click", function () {
-            console.log('btn clicked');
             var msg = {
-
-                'answer': $('input#answer').val() ,
+                'answer': $('input#answer').val(),
             };
             if (socket.readyState === socket.OPEN) {
                 socket.send(JSON.stringify(msg));
             }
             ;
 
+        });
+
+        $("input#answer").keyup(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                $("button.answer").click();
+            }
         });
     </script>
 {% endblock %}

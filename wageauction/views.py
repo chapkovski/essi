@@ -25,8 +25,7 @@ class WorkerPage(Page):
 
 class ActiveWorkerPage(Page):
     def is_displayed(self):
-        closed_contract = self.player.work_to_do.filter(accepted=True).exists()
-        return self.player.role() == 'worker' and self.extra_is_displayed() and closed_contract
+        return self.player.role() == 'worker' and self.player.active_worker and self.extra_is_displayed()
 
     def extra_is_displayed(self):
         return True
@@ -49,6 +48,11 @@ class Auction(EmployerPage):
                 'active_contracts': active_contracts,
                 }
 
+    def before_next_page(self):
+        closed_contract = self.player.contract.filter(accepted=True)
+        if closed_contract.exists():
+            self.player.wage_offer = closed_contract.first().amount
+
 
 class Accept(WorkerPage):
     def extra_is_displayed(self):
@@ -60,10 +64,14 @@ class Accept(WorkerPage):
         return {'time_left': self.group.time_left(),
                 'active_contracts': active_contracts}
 
+    def before_next_page(self):
+        closed_contract = self.player.work_to_do.filter(accepted=True).exists()
+        self.player.active_worker = closed_contract
+
 
 class AfterAuctionDecision(EmployerPage):
     form_model = models.Player
-    form_fields = ["wage_adjustment"]
+    form_fields = ["wage_adjusted"]
 
     def extra_is_displayed(self):
         closed_contract = self.player.contract.filter(accepted=True).exists()
@@ -71,15 +79,33 @@ class AfterAuctionDecision(EmployerPage):
 
     def before_next_page(self):
         closed_contract = self.player.contract.get(accepted=True)
-        closed_contract.amount_updated = self.player.wage_adjustment
+        closed_contract.amount_updated = self.player.wage_adjusted
+        closed_contract.save()
+        closed_contract.worker.job_to_do_updated = True
 
 
 class AuctionResultsEmployer(EmployerPage):
     ...
 
 
+class ActiveWorkerWPBeforeStart(WaitPage):
+    def is_displayed(self):
+        if self.player.role() == 'employer':
+            closed_contract = self.player.contract.filter(accepted=True)
+            if closed_contract.exists():
+                worker_pk = self.player.contract.get().worker.participant.pk
+                self.send_completion_message(set([worker_pk]))
+
+        return not self.player.job_to_do_updated and self.player.active_worker
+
+
 class AuctionResultsWorker(ActiveWorkerPage):
-    ...
+    def vars_for_template(self):
+        closed_contract = self.player.work_to_do.get()
+        worker_wage_offer = closed_contract.amount
+        worker_wage_adjusted = closed_contract.amount_updated
+        return {'worker_wage_offer': worker_wage_offer,
+                'worker_wage_adjusted': worker_wage_adjusted, }
 
 
 class Start(ActiveWorkerPage):
@@ -90,8 +116,6 @@ class WorkPage(ActiveWorkerPage):
     timer_text = 'Time left to complete this section:'
 
     timeout_seconds = 30000
-
-
 
     def before_next_page(self):
         ...
@@ -110,7 +134,9 @@ page_sequence = [
     WP,
     Auction, Accept,
     AfterAuctionDecision,
-    AuctionResultsEmployer, AuctionResultsWorker,
+    AuctionResultsEmployer,
+    ActiveWorkerWPBeforeStart,
+    AuctionResultsWorker,
     Start,
     WorkPage,
     WaitP,

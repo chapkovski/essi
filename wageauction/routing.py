@@ -11,11 +11,11 @@ wageauction_routing = [route("websocket.connect",
                              ws_disconnect, path=r'^/(?P<group_name>\w+)$'), ]
 
 workpage_routing = [route("websocket.connect",
-                          work_connect, path=r'^/(?P<worker_code>\w+)$'),
+                          work_connect, path=r'^/(?P<worker_code>\w+)/(?P<player_pk>\w+)$'),
                     route("websocket.receive",
-                          work_message, path=r'^/(?P<worker_code>\w+)$'),
+                          work_message,  path=r'^/(?P<worker_code>\w+)/(?P<player_pk>\w+)$'),
                     route("websocket.disconnect",
-                          work_disconnect, path=r'^/(?P<worker_code>\w+)$'), ]
+                          work_disconnect,  path=r'^/(?P<worker_code>\w+)/(?P<player_pk>\w+)$'), ]
 
 channel_routing += [
     include(wageauction_routing, path=r"^/wageauction"),

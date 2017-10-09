@@ -23,10 +23,10 @@
     The employer that hired you was given the change to adjust the wage.
 </p>
     <p>
-        The initial wage offer was <b>{{ player.wage_offer }}</b>.
+        The initial wage offer was <b>{{ worker_wage_offer }}</b>.
         </p>
     <p>
-    The final wage is <b><span id="final"> </span></b>.
+    The final wage is <b><span id="final"> {{ worker_wage_adjusted }} </span></b>.
 </p>
         </span>
 </div> <br>
@@ -41,46 +41,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        var hired = "you were <b>hired</b>.";
-        var unemployed = "you were <b>not hired</b>.";
-        var partner = {{ player.partner_id |safe }};
 
-        var taxcond = {{ player.tax_outcome |json }};
-        var notax = "There are <b>no unforeseen taxes</b> this period.";
-        var firmtax = "A <b>tax of 20 % on employer revenue</b> is implemented.";
-        var workertax = "A <b>tax of 20 % on worker earnings</b> is implemented.";
-        var na = "Does not apply...";
-        var final_wage = {{ player.wage_offer | json }} + {{ player.wage_adjustment | json}};
-
-        window.onload = function () {
-            if (partner === 0) {
-                $('span#status').html(unemployed);
-                $('span#adjustment_info').html(na);
-                $('span#last').empty();
-            }
-            else {
-                $('span#status').html(hired);
-                $("span#final").html(final_wage);
-            }
-            if (partner === 0) {
-                $('span#tax_condition').html(na);
-            }
-            else {
-                if (taxcond === 1) {
-                    $('span#tax_condition').html(notax);
-                }
-                else if (taxcond === 2 ) {
-                    $('span#tax_condition').html(firmtax);
-                }
-                else if (taxcond === 3) {
-                    $('span#tax_condition').html(workertax);
-                }
-                else {
-                    $('span#tax_condition').html(na);
-                }
-            }
-        };
-
-    </script>
 {% endblock %}
