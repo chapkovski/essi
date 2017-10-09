@@ -49,6 +49,7 @@ class Group(BaseGroup):
         return time_left
 
     def set_payoffs(self):
+        # TO DO: the payoff function should be re-written completely based on new JobCOntract model info - Philipp
         for person in self.get_players():
             if person.role() == 'employer':
                 if person.partner_id == 0:
@@ -82,9 +83,9 @@ class Player(BasePlayer):
     job_to_do_updated=models.BooleanField(initial=False)
 
     def role(self):
-        if self.participant.id_in_session < Constants.num_employers + 1:
+        if self.participant.id_in_group <= Constants.num_employers:
             return 'employer'
-        if self.participant.id_in_session > Constants.num_employers:
+        if self.participant.id_in_group > Constants.num_employers:
             return 'worker'
 
 
