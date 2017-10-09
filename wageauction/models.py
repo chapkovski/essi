@@ -23,6 +23,7 @@ class Constants(BaseConstants):
     starting_time = 15000
     num_employers = 2
     num_workers = players_per_group - num_employers
+    assert num_workers > num_employers, 'NUMBER OF EMPLOYERS SHOULD EXCEED THE NUMBER OF WORKERS IN THE MARKET'
     task_time = 300
     lb = 30
     ub = 101
