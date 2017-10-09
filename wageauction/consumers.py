@@ -85,11 +85,17 @@ def slicelist(l, n):
     return [l[i:i + n] for i in range(0, len(l), n)]
 
 
-def get_task():
+def get_random_list():
     max_len = 100
+    low_upper_bound = 50
+    high_upper_bound = 99
+    return [randint(10, randint(low_upper_bound, high_upper_bound)) for i in range(max_len)]
+
+
+def get_task():
     string_len = 10
-    listx = [randint(10, 99) for i in range(max_len)]
-    listy = [randint(10, 99) for i in range(max_len)]
+    listx = get_random_list()
+    listy = get_random_list()
     answer = max(listx) + max(listy)
     listx = slicelist(listx, string_len)
     listy = slicelist(listy, string_len)
@@ -123,7 +129,7 @@ def work_message(message, worker_code, player_pk):
     if int(answer) == int(player.last_correct_answer):
         player.tasks_correct += 1
     new_task = get_task()
-    new_task['tasks_correct']=player.tasks_correct
+    new_task['tasks_correct'] = player.tasks_correct
     new_task['tasks_attempted'] = player.tasks_attempted
     player.last_correct_answer = new_task['correct_answer']
     player.save()

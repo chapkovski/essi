@@ -83,9 +83,9 @@ class Player(BasePlayer):
     job_to_do_updated=models.BooleanField(initial=False)
 
     def role(self):
-        if self.participant.id_in_group <= Constants.num_employers:
+        if self.id_in_group <= Constants.num_employers:
             return 'employer'
-        if self.participant.id_in_group > Constants.num_employers:
+        if self.id_in_group > Constants.num_employers:
             return 'worker'
 
 
