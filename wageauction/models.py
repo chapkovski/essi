@@ -31,24 +31,10 @@ class Constants(BaseConstants):
 
 
 class Subsession(BaseSubsession):
+    wp_to_delete_completion=models.IntegerField()
     def creating_session(self):
-        for g in self.get_groups():
-            g.matched1 = 0
-            g.matched2 = 0
-            g.matched3 = 0
-            g.matched4 = 0
-            g.matched5 = 0
-            g.standing1 = 0
-            g.standing2 = 0
-            g.standing3 = 0
-            g.standing4 = 0
-            g.standing5 = 0
-
         tax_outcome = random.randint(1, 3)
         for p in self.get_players():
-            p.tasks_attempted = 0
-            p.tasks_correct = 0
-            # potentially change the tax_outcome to a group outcome common to all in the experiment (room).
             p.tax_outcome = tax_outcome
 
 
@@ -89,11 +75,11 @@ class Player(BasePlayer):
     wage_adjustment = models.IntegerField()
     wage_adjusted=models.IntegerField()
     last_correct_answer=models.IntegerField()
-    tasks_attempted = models.PositiveIntegerField()
-    tasks_correct = models.PositiveIntegerField()
+    tasks_attempted = models.PositiveIntegerField(initial=0)
+    tasks_correct = models.PositiveIntegerField(initial=0)
     partner_payoff = models.CurrencyField()
     active_worker=models.BooleanField()
-    job_to_do_updated=models.BooleanField()
+    job_to_do_updated=models.BooleanField(initial=False)
 
     def role(self):
         if self.participant.id_in_session < Constants.num_employers + 1:
